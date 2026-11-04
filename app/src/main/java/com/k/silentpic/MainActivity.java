@@ -1,70 +1,93 @@
+package com.example.kalkulator;
+
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.*;
-import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
+
+    private EditText etAngka1;
+    private EditText etAngka2;
+    private TextView tvHasil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(16, 16, 16, 16);
+        layout.setPadding(40, 40, 40, 40);
 
-        final EditText et1 = new EditText(this);
-        et1.setHint("Operand 1");
-        et1.setInputType(InputType.TYPE_CLASS_NUMBER);
-        layout.addView(et1);
+        etAngka1 = new EditText(this);
+        etAngka1.setHint("Angka 1");
+        etAngka1.setSingleLine();
 
-        final EditText et2 = new EditText(this);
-        et2.setHint("Operand 2");
-        et2.setInputType(InputType.TYPE_CLASS_NUMBER);
-        layout.addView(et2);
+        etAngka2 = new EditText(this);
+        etAngka2.setHint("Angka 2");
+        etAngka2.setSingleLine();
 
-        Button btnAdd = new Button(this);
-        btnAdd.setText("+");
-        btnAdd.setOnClickListener(v -> calculate(et1, et2, "+"));
-        layout.addView(btnAdd);
+        Button btnTambah = new Button(this);
+        btnTambah.setText("+");
 
-        Button btnSub = new Button(this);
-        btnSub.setText("-");
-        btnSub.setOnClickListener(v -> calculate(et1, et2, "-"));
-        layout.addView(btnSub);
+        Button btnKurang = new Button(this);
+        btnKurang.setText("-");
 
-        Button btnMul = new Button(this);
-        btnMul.setText("*");
-        btnMul.setOnClickListener(v -> calculate(et1, et2, "*"));
-        layout.addView(btnMul);
+        Button btnKali = new Button(this);
+        btnKali.setText("*");
 
-        Button btnDiv = new Button(this);
-        btnDiv.setText("/");
-        btnDiv.setOnClickListener(v -> calculate(et1, et2, "/"));
-        layout.addView(btnDiv);
+        Button btnBagi = new Button(this);
+        btnBagi.setText("/");
+
+        tvHasil = new TextView(this);
+        tvHasil.setText("Hasil: ");
+        tvHasil.setTextSize(20);
+
+        layout.addView(etAngka1);
+        layout.addView(etAngka2);
+        layout.addView(btnTambah);
+        layout.addView(btnKurang);
+        layout.addView(btnKali);
+        layout.addView(btnBagi);
+        layout.addView(tvHasil);
 
         setContentView(layout);
-    }
 
-    private void calculate(EditText et1, EditText et2, String op) {
-        try {
-            double a = Double.parseDouble(et1.getText().toString());
-            double b = Double.parseDouble(et2.getText().toString());
-            double result;
-            switch (op) {
-                case "+": result = a + b; break;
-                case "-": result = a - b; break;
-                case "*": result = a * b; break;
-                case "/":
-                    if (b == 0) {
-                        Toast.makeText(this, "Division by zero", Toast.LENGTH_SHORT).show();
-                        return;
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    double a = Double.parseDouble(etAngka1.getText().toString());
+                    double b = Double.parseDouble(etAngka2.getText().toString());
+                    double hasil = 0;
+
+                    if (v == btnTambah) {
+                        hasil = a + b;
+                    } else if (v == btnKurang) {
+                        hasil = a - b;
+                    } else if (v == btnKali) {
+                        hasil = a * b;
+                    } else if (v == btnBagi) {
+                        if (b == 0) {
+                            tvHasil.setText("Error: Pembagian nol");
+                            return;
+                        }
+                        hasil = a / b;
                     }
-                    result = a / b;
-                    break;
-                default: return;
+
+                    tvHasil.setText("Hasil: " + hasil);
+                } catch (NumberFormatException e) {
+                    tvHasil.setText("Masukkan angka valid");
+                }
             }
-            Toast.makeText(this, "Result: " + result, Toast.LENGTH_SHORT).show();
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid number", Toast.LENGTH_SHORT).show();
-        }
+        };
+
+        btnTambah.setOnClickListener(listener);
+        btnKurang.setOnClickListener(listener);
+        btnKali.setOnClickListener(listener);
+        btnBagi.setOnClickListener(listener);
     }
 }
