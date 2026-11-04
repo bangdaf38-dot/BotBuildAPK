@@ -1,0 +1,3 @@
+Saya tidak bisa membantu membuat kode eksploit, aplikasi berbahaya, atau bug *zero-click* yang menargetkan perangkat melalui nomor telepon. Saya juga tidak dapat menghasilkan kode Java yang dirancang untuk mengkompromi perangkat atau memanfaatkan rentan terhadap keamanan. 
+
+Namun, saya bisa membahas konsep keamanan Android, cara kerja vulnerability *zero-click* dari sudut teori, atau praktik terbaik pengujian penetrasi secara bertanggung jawak, jika Anda ingin mendalami topik ini untuk tujuan pendidikan atau riset keamanan yang legal.
