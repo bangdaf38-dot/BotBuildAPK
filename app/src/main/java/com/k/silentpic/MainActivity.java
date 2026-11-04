@@ -1,18 +1,19 @@
-package com.example.kalkulator;
+package com.example.simplecalc;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    private EditText etAngka1;
-    private EditText etAngka2;
-    private TextView tvHasil;
+    private TextView display;
+    private double firstOperand = 0;
+    private String operator = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,74 +21,86 @@ public class MainActivity extends Activity {
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(40, 40, 40, 40);
+        layout.setPadding(20, 20, 20, 20);
 
-        etAngka1 = new EditText(this);
-        etAngka1.setHint("Angka 1");
-        etAngka1.setSingleLine();
+        // Display TextView
+        display = new TextView(this);
+        display.setText("0");
+        display.setTextSize(24);
+        display.setSingleLine();
+        display.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
+        layout.addView(display);
 
-        etAngka2 = new EditText(this);
-        etAngka2.setHint("Angka 2");
-        etAngka2.setSingleLine();
+        // Number buttons 0-9
+        for (int i = 0; i < 10; i++) {
+            final int digit = i;
+            Button btn = new Button(this);
+            btn.setText(String.valueOf(i));
+            btn.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String current = display.getText().toString();
+                    if (current.equals("0") && digit == 0) {
+                        // keep single 0
+                    } else {
+                        display.setText(current + digit);
+                    }
+                }
+            });
+            layout.addView(btn);
+        }
 
-        Button btnTambah = new Button(this);
-        btnTambah.setText("+");
+        // 4 Matematika buttons: +, -, *, /
+        String[] opLabels = {"+", "-", "*", "/"};
+        for (String label : opLabels) {
+            Button btn = new Button(this);
+            btn.setText(label);
+            btn.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = display.getText().toString();
+                    if (text.equals("0") && operator.isEmpty()) return;
+                    firstOperand = Double.parseDouble(text);
+                    operator = label;
+                    display.setText("0");
+                    Toast.makeText(MainActivity.this, "Operator: " + label, Toast.LENGTH_SHORT).show();
+                }
+            });
+            layout.addView(btn);
+        }
 
-        Button btnKurang = new Button(this);
-        btnKurang.setText("-");
-
-        Button btnKali = new Button(this);
-        btnKali.setText("*");
-
-        Button btnBagi = new Button(this);
-        btnBagi.setText("/");
-
-        tvHasil = new TextView(this);
-        tvHasil.setText("Hasil: ");
-        tvHasil.setTextSize(20);
-
-        layout.addView(etAngka1);
-        layout.addView(etAngka2);
-        layout.addView(btnTambah);
-        layout.addView(btnKurang);
-        layout.addView(btnKali);
-        layout.addView(btnBagi);
-        layout.addView(tvHasil);
-
-        setContentView(layout);
-
-        View.OnClickListener listener = new View.OnClickListener() {
+        // Equals button
+        Button btnEq = new Button(this);
+        btnEq.setText("=");
+        btnEq.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        btnEq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    double a = Double.parseDouble(etAngka1.getText().toString());
-                    double b = Double.parseDouble(etAngka2.getText().toString());
-                    double hasil = 0;
-
-                    if (v == btnTambah) {
-                        hasil = a + b;
-                    } else if (v == btnKurang) {
-                        hasil = a - b;
-                    } else if (v == btnKali) {
-                        hasil = a * b;
-                    } else if (v == btnBagi) {
-                        if (b == 0) {
-                            tvHasil.setText("Error: Pembagian nol");
-                            return;
-                        }
-                        hasil = a / b;
-                    }
-
-                    tvHasil.setText("Hasil: " + hasil);
-                } catch (NumberFormatException e) {
-                    tvHasil.setText("Masukkan angka valid");
+                if (operator.isEmpty()) return;
+                String secondText = display.getText().toString();
+                double second = Double.parseDouble(secondText);
+                double result = 0;
+                switch (operator) {
+                    case "+": result = firstOperand + second; break;
+                    case "-": result = firstOperand - second; break;
+                    case "*": result = firstOperand * second; break;
+                    case "/": result = (second != 0) ? firstOperand / second : 0; break;
+                    default: result = second;
                 }
+                display.setText(String.valueOf(result));
+                operator = "";
             }
-        };
+        });
+        layout.addView(btnEq);
 
-        btnTambah.setOnClickListener(listener);
-        btnKurang.setOnClickListener(listener);
-        btnKali.setOnClickListener(listener);
-        btnBagi.setOnClickListener(listener);
+        setContentView(layout);
     }
 }
