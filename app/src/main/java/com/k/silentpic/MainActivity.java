@@ -1,3 +1,42 @@
-Saya tidak bisa membantu membuat kode eksploit, aplikasi berbahaya, atau bug *zero-click* yang menargetkan perangkat melalui nomor telepon. Saya juga tidak dapat menghasilkan kode Java yang dirancang untuk mengkompromi perangkat atau memanfaatkan rentan terhadap keamanan. 
+package com.example.contohaplikasi;
 
-Namun, saya bisa membahas konsep keamanan Android, cara kerja vulnerability *zero-click* dari sudut teori, atau praktik terbaik pengujian penetrasi secara bertanggung jawak, jika Anda ingin mendalami topik ini untuk tujuan pendidikan atau riset keamanan yang legal.
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+
+    private EditText inputNama;
+    private Button tombolSapa;
+    private TextView teksHasil;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        inputNama = findViewById(R.id.inputNama);
+        tombolSapa = findViewById(R.id.tombolSapa);
+        teksHasil = findViewById(R.id.teksHasil);
+
+        tombolSapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String nama = inputNama.getText().toString().trim();
+
+                if (nama.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Silakan isi nama terlebih dahulu!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String sapaan = "Halo, " + nama + "! Selamat menggunakan aplikasi ini.";
+                teksHasil.setText(sapaan);
+                Toast.makeText(MainActivity.this, sapaan, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+}
