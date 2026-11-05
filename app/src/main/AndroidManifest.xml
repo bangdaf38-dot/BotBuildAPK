@@ -3,8 +3,7 @@
     package="com.k.silentpic"
     android:versionCode="1"
     android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="33"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33"/>
     <application android:label="AI Build" android:icon="@android:drawable/sym_def_app_icon">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
